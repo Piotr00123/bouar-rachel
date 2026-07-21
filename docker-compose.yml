@@ -1,0 +1,107 @@
+services:
+  nginx_proxy:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_MOODLE_PORT:-8070}:8070"
+      - "${NGINX_KOLIBRI_PORT:-8020}:8020"
+      - "${NGINX_RACHEL_PORT:-8009}:8009"
+      - "${NGINX_UMAMI_PORT:-3000}:3000"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./panel-assets:/usr/share/nginx/html:ro  # <--- MAPOWANIE PANELU WWW
+    restart: unless-stopped
+    networks:
+      - bouar_network
+
+  moodle_server:
+    image: moodlehq/moodle-php-apache:8.1
+    container_name: moodle_server
+    volumes:
+      - ./dane_moodle_config:/var/www/html
+      - ./dane_moodle_data:/var/www/moodledata
+    restart: unless-stopped
+    depends_on:
+      - moodle_db
+    networks:
+      - bouar_network
+
+  moodle_db:
+    image: mariadb:10.11
+    container_name: moodle_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MOODLE_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MOODLE_DB_NAME:-moodle}
+    volumes:
+      - ./dane_moodle_db:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - bouar_network
+
+  kolibri_server:
+    image: learningequality/kolibri:latest
+    container_name: kolibri_server
+    ports:
+      - "${KOLIBRI_CONTENT_PORT:-8081}:8081"
+    environment:
+      - KOLIBRI_ZIP_CONTENT_PORT=8081
+      - KOLIBRI_ZIP_CONTENT_ORIGIN=http://localhost:8081
+      - KOLIBRI_HOME=/home/kolibri/.kolibri
+    volumes:
+      - ./dane_kolibri_config:/home/kolibri/.kolibri
+      - ./dane_kolibri_data:/var/kolibri_data
+    restart: unless-stopped
+    networks:
+      - bouar_network
+
+  rachel_bouar:
+    image: bouar-rachel
+    container_name: rachel_bouar
+    volumes:
+      - ./dane_rachel_config:/var/www/html
+      - ./dane_kiwix:/var/www/html/modules
+    restart: unless-stopped
+    networks:
+      - bouar_network
+
+  kiwix_server:
+    image: ghcr.io/kiwix/kiwix-serve:3.8.2
+    container_name: kiwix_server
+    ports:
+      - "${KIWIX_PORT:-8080}:8080"
+    volumes:
+      - ./dane_kiwix:/data
+    entrypoint: [ "sh", "-c", "exec kiwix-serve --port 8080 --skipInvalid $$(find /data -maxdepth 1 -name '*.zim')" ]
+    restart: unless-stopped
+    networks:
+      - bouar_network
+
+  umami_analytics:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami_analytics
+    environment:
+      - DATABASE_URL=postgresql://${UMAMI_DB_USER}:${UMAMI_DB_PASSWORD}@umami_db:5432/${UMAMI_DB_NAME}
+      - APP_SECRET=${UMAMI_APP_SECRET}
+    restart: unless-stopped
+    depends_on:
+      - umami_db
+    networks:
+      - bouar_network
+
+  umami_db:
+    image: postgres:15-alpine
+    container_name: umami_db
+    environment:
+      - POSTGRES_DB=${UMAMI_DB_NAME}
+      - POSTGRES_USER=${UMAMI_DB_USER}
+      - POSTGRES_PASSWORD=${UMAMI_DB_PASSWORD}
+    volumes:
+      - ./dane_umami_db:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - bouar_network
+
+networks:
+  bouar_network:
+    driver: bridge

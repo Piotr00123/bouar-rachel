@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instytut Bouar - Serwer Edukacyjny</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; m-margin: 0; }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        .version { color: #7f8c8d; font-size: 0.9em; margin-bottom: 40px; }
+        .container { display: flex; flex-wrap: wrap; justify-content: center; max-width: 1000px; margin: 0 auto; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 15px; padding: 30px; width: 220px; transition: transform 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+        .card h3 { margin: 15px 0 5px 0; color: #2c3e50; }
+        .card p { color: #7f8c8d; font-size: 0.85em; margin: 0; text-align: center; }
+        .icon { font-size: 3em; }
+        .kiwix-logo { height: 60px; }
+    </style>
+</head>
+<body>
+    <h1>Instytut Bouar – Panel Usług Edukacyjnych</h1>
+    <div class="version">Standard Bagandou-BOUAR v1.5 (Safety First)</div>
+    
+    <div class="container">
+<a href="http://localhost:8080" class="card">
+    <div class="icon">
+        <!-- Autonomiczna ikona SVG działająca w 100% offline -->
+        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="kiwix-logo" style="width:60px; height:60px; fill:#2c3e50;">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+        </svg>
+    </div>
+    <h3>KIWIX</h3>
+    <p>Centralna wyszukiwarka i cyfrowe bazy wiedzy</p>
+</a>
+        <a href=":8070" id="link-rachel" class="card">
+            <span class="icon">📖</span>
+            <h3>RACHEL</h3>
+            <p>Materiały offline i encyklopedie wiedzy</p>
+        </a>
+        
+        <a href=":8020" id="link-moodle" class="card">
+            <span class="icon">🎓</span>
+            <h3>MOODLE</h3>
+            <p>System zarządzania nauką i kursy e-learningowe</p>
+        </a>
+        
+        <a href=":8009" id="link-kolibri" class="card">
+            <span class="icon">🐦</span>
+            <h3>KOLIBRI</h3>
+            <p>Platforma edukacyjna i ćwiczenia interaktywne</p>
+        </a>
+
+        <a href=":3000" id="link-umami" class="card">
+            <span class="icon">📊</span>
+            <h3>UMAMI</h3>
+            <p>Analityka i statystyki użycia serwera</p>
+        </a>
+    </div>
+
+    <script>
+        // Skrypt automatycznie podmienia hosta na aktualny adres IP/localhost urządzenia
+        const currentHost = window.location.hostname;
+        document.getElementById('link-rachel').href = 'http://' + currentHost + ':8070';
+        document.getElementById('link-moodle').href = 'http://' + currentHost + ':8020';
+        document.getElementById('link-kolibri').href = 'http://' + currentHost + ':8009';
+        document.getElementById('link-umami').href = 'http://' + currentHost + ':3000';
+    </script>
+</body>
+</html>
