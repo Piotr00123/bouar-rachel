@@ -4,7 +4,7 @@
     <title>Instytut Bouar - Serwer Edukacyjny</title>
     <meta charset="utf-8">
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; m-margin: 0; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; margin: 0; }
         h1 { color: #2c3e50; margin-bottom: 5px; }
         .version { color: #7f8c8d; font-size: 0.9em; margin-bottom: 40px; }
         .container { display: flex; flex-wrap: wrap; justify-content: center; max-width: 1000px; margin: 0 auto; }
@@ -12,44 +12,57 @@
         .card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
         .card h3 { margin: 15px 0 5px 0; color: #2c3e50; }
         .card p { color: #7f8c8d; font-size: 0.85em; margin: 0; text-align: center; }
-        .icon { font-size: 3em; }
-        .kiwix-logo { height: 60px; }
+        .icon { font-size: 3em; line-height: 1em; }
+        .kiwix-logo { height: 60px; width: 60px; }
     </style>
 </head>
 <body>
     <h1>Instytut Bouar – Panel Usług Edukacyjnych</h1>
     <div class="version">Standard Bagandou-BOUAR v1.5 (Safety First)</div>
-    
+
     <div class="container">
-<a href="http://localhost:8080" class="card">
-    <div class="icon">
-        <!-- Autonomiczna ikona SVG działająca w 100% offline -->
-        <svg xmlns="http://w3.org" viewBox="0 0 24 24" class="kiwix-logo" style="width:60px; height:60px; fill:#2c3e50;">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-        </svg>
-    </div>
-    <h3>KIWIX</h3>
-    <p>Centralna wyszukiwarka i cyfrowe bazy wiedzy</p>
-</a>
-        <a href=":8070" id="link-rachel" class="card">
-            <span class="icon">📖</span>
-            <h3>RACHEL</h3>
-            <p>Materiały offline i encyklopedie wiedzy</p>
+        <!-- KIWIX (Port 8080) -->
+        <a href="" id="link-kiwix" target="_blank" class="card">
+            <div class="icon" style="height: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                <svg xmlns="http://w3.org" viewBox="0 0 100 100" class="kiwix-logo">
+                    <circle cx="48" cy="55" r="28" fill="#2c3e50" />
+                    <path d="M48 27 L48 83 M20 55 L76 55" stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.4" />
+                    <path d="M25 40 Q48 50 71 40 M25 70 Q48 60 71 70" stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.4" />
+                    <path d="M35 30 Q45 55 35 80 M61 30 Q51 55 61 80" stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.4" />
+                    <circle cx="70" cy="38" r="14" fill="#2c3e50" />
+                    <circle cx="72" cy="34" r="2.5" fill="#ffffff" />
+                    <path d="M78 38 Q95 44 96 45 Q82 44 76 42 Z" fill="#2c3e50" />
+                    <path d="M38 82 L32 92 M38 82 L42 92" stroke="#2c3e50" stroke-width="3" stroke-linecap="round" />
+                    <path d="M58 82 L52 92 M58 82 L62 92" stroke="#2c3e50" stroke-width="3" stroke-linecap="round" />
+                </svg>
+            </div>
+            <h3>KIWIX</h3>
+            <p>Centralna wyszukiwarka i cyfrowe bazy wiedzy</p>
         </a>
-        
-        <a href=":8020" id="link-moodle" class="card">
+
+        <!-- BIBLIOTEKA / RACHEL (Port 8009) -->
+        <a href="" id="link-rachel" target="_blank" class="card">
+            <span class="icon">📚</span>
+            <h3>BIBLIOTEKA / RACHEL</h3>
+            <p>Encyklopedie Wikipedia, Medycyna, podręczniki i materiały offline</p>
+        </a>
+
+        <!-- MOODLE (Port 8070) -->
+        <a href="" id="link-moodle" target="_blank" class="card">
             <span class="icon">🎓</span>
             <h3>MOODLE</h3>
             <p>System zarządzania nauką i kursy e-learningowe</p>
         </a>
-        
-        <a href=":8009" id="link-kolibri" class="card">
+
+        <!-- KOLIBRI (Port 8020) -->
+        <a href="" id="link-kolibri" target="_blank" class="card">
             <span class="icon">🐦</span>
             <h3>KOLIBRI</h3>
             <p>Platforma edukacyjna i ćwiczenia interaktywne</p>
         </a>
 
-        <a href=":3000" id="link-umami" class="card">
+        <!-- UMAMI (Port 3000) -->
+        <a href="" id="link-umami" target="_blank" class="card">
             <span class="icon">📊</span>
             <h3>UMAMI</h3>
             <p>Analityka i statystyki użycia serwera</p>
@@ -57,11 +70,11 @@
     </div>
 
     <script>
-        // Skrypt automatycznie podmienia hosta na aktualny adres IP/localhost urządzenia
         const currentHost = window.location.hostname;
-        document.getElementById('link-rachel').href = 'http://' + currentHost + ':8070';
-        document.getElementById('link-moodle').href = 'http://' + currentHost + ':8020';
-        document.getElementById('link-kolibri').href = 'http://' + currentHost + ':8009';
+        document.getElementById('link-kiwix').href = 'http://' + currentHost + ':8080';
+        document.getElementById('link-rachel').href = 'http://' + currentHost + ':8009';
+        document.getElementById('link-moodle').href = 'http://' + currentHost + ':8070';
+        document.getElementById('link-kolibri').href = 'http://' + currentHost + ':8020';
         document.getElementById('link-umami').href = 'http://' + currentHost + ':3000';
     </script>
 </body>
