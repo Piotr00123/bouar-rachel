@@ -1,3 +1,7 @@
+networks:
+  bouar_network:
+    driver: bridge
+
 services:
   nginx_proxy:
     image: nginx:alpine
@@ -10,10 +14,14 @@ services:
       - "${NGINX_UMAMI_PORT:-3000}:3000"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./panel-assets:/usr/share/nginx/html:ro  # <--- MAPOWANIE PANELU WWW
-    restart: unless-stopped
+      - ./panel-assets:/usr/share/nginx/html:ro
     networks:
       - bouar_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128m
 
   moodle_server:
     image: moodlehq/moodle-php-apache:8.1
@@ -21,23 +29,37 @@ services:
     volumes:
       - ./dane_moodle_config:/var/www/html
       - ./dane_moodle_data:/var/www/moodledata
-    restart: unless-stopped
-    depends_on:
-      - moodle_db
     networks:
       - bouar_network
+    restart: unless-stopped
+    depends_on:
+      moodle_db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1g
 
   moodle_db:
     image: mariadb:10.11
     container_name: moodle_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${MOODLE_DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MOODLE_DB_NAME:-moodle}
+      - MYSQL_ROOT_PASSWORD=${MOODLE_DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MOODLE_DB_NAME:-moodle}
     volumes:
       - ./dane_moodle_db:/var/lib/mysql
-    restart: unless-stopped
     networks:
       - bouar_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512m
 
   kolibri_server:
     image: learningequality/kolibri:latest
@@ -51,9 +73,13 @@ services:
     volumes:
       - ./dane_kolibri_config:/home/kolibri/.kolibri
       - ./dane_kolibri_data:/var/kolibri_data
-    restart: unless-stopped
     networks:
       - bouar_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1g
 
   rachel_bouar:
     image: bouar-rachel
@@ -61,9 +87,13 @@ services:
     volumes:
       - ./dane_rachel_config:/var/www/html
       - ./dane_kiwix:/var/www/html/modules
-    restart: unless-stopped
     networks:
       - bouar_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512m
 
   kiwix_server:
     image: ghcr.io/kiwix/kiwix-serve:3.8.2
@@ -73,9 +103,13 @@ services:
     volumes:
       - ./dane_kiwix:/data
     entrypoint: [ "sh", "-c", "exec kiwix-serve --port 8080 --skipInvalid $$(find /data -maxdepth 1 -name '*.zim')" ]
-    restart: unless-stopped
     networks:
       - bouar_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256m
 
   umami_analytics:
     image: ghcr.io/umami-software/umami:postgresql-latest
@@ -83,11 +117,16 @@ services:
     environment:
       - DATABASE_URL=postgresql://${UMAMI_DB_USER}:${UMAMI_DB_PASSWORD}@umami_db:5432/${UMAMI_DB_NAME}
       - APP_SECRET=${UMAMI_APP_SECRET}
-    restart: unless-stopped
-    depends_on:
-      - umami_db
     networks:
       - bouar_network
+    restart: unless-stopped
+    depends_on:
+      umami_db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512m
 
   umami_db:
     image: postgres:15-alpine
@@ -98,10 +137,15 @@ services:
       - POSTGRES_PASSWORD=${UMAMI_DB_PASSWORD}
     volumes:
       - ./dane_umami_db:/var/lib/postgresql/data
-    restart: unless-stopped
     networks:
       - bouar_network
-
-networks:
-  bouar_network:
-    driver: bridge
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512m
