@@ -1,3 +1,25 @@
 .env
+
+# Docker runtime data
+app_data/
+storage_data/
+
+# Kiwix content
+dane_kiwix/
+
+# Kolibri
+dane_kolibri_config/
+dane_kolibri_data/
+
+# Moodle
+dane_moodle_config/
+dane_moodle_data/
+dane_moodle_db/
+
+# Rachel
+dane_rachel_config/
+
+# Umami
+dane_umami_db/.env
 app_data/
 storage_data/
