@@ -7,11 +7,33 @@
         body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f4f4; margin: 0; }
         h1 { color: #2c3e50; margin-bottom: 5px; }
         .version { color: #7f8c8d; font-size: 0.9em; margin-bottom: 40px; }
-        .container { display: flex; flex-wrap: wrap; justify-content: center; max-width: 1000px; margin: 0 auto; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin: 15px; padding: 30px; width: 220px; transition: transform 0.2s; text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* Zmiana na dwukolumnowy Grid 2x2 */
+        .container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 25px; 
+            max-width: 550px; 
+            margin: 0 auto; 
+        }
+        
+        .card { 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            padding: 30px; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            text-decoration: none; 
+            color: inherit; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            box-sizing: border-box;
+        }
         .card:hover { transform: translateY(-5px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-        .card h3 { margin: 15px 0 5px 0; color: #2c3e50; }
-        .card p { color: #7f8c8d; font-size: 0.85em; margin: 0; text-align: center; }
+        .card h3 { margin: 15px 0 5px 0; color: #2c3e50; font-size: 1.15em; }
+        .card p { color: #7f8c8d; font-size: 0.85em; margin: 0; text-align: center; line-height: 1.3; }
         .icon { font-size: 3em; line-height: 1em; }
         .kiwix-logo { height: 60px; width: 60px; }
     </style>
@@ -44,14 +66,7 @@
         <a href="" id="link-rachel" target="_blank" class="card">
             <span class="icon">📚</span>
             <h3>BIBLIOTEKA / RACHEL</h3>
-            <p>Encyklopedie Wikipedia, Medycyna, podręczniki i materiały offline</p>
-        </a>
-
-        <!-- MOODLE (Port 8070) -->
-        <a href="" id="link-moodle" target="_blank" class="card">
-            <span class="icon">🎓</span>
-            <h3>MOODLE</h3>
-            <p>System zarządzania nauką i kursy e-learningowe</p>
+            <p>Encyklopedie Wikipedia, Medycyna i materiały offline</p>
         </a>
 
         <!-- KOLIBRI (Port 8020) -->
@@ -73,7 +88,6 @@
         const currentHost = window.location.hostname;
         document.getElementById('link-kiwix').href = 'http://' + currentHost + ':8080';
         document.getElementById('link-rachel').href = 'http://' + currentHost + ':8009';
-        document.getElementById('link-moodle').href = 'http://' + currentHost + ':8070';
         document.getElementById('link-kolibri').href = 'http://' + currentHost + ':8020';
         document.getElementById('link-umami').href = 'http://' + currentHost + ':3000';
     </script>
